@@ -42,7 +42,6 @@ struct NodeMetadata {
 };
 
 // insert the function body into the function when compiling code.
-// output the user defined data
 inline ostream & operator<< (ostream &os, const NodeMetadata &node) { return node.Print(os); }
 
 

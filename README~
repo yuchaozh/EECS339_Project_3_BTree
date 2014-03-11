@@ -102,7 +102,6 @@ Understanding Virtual Disk Systems
 
 You can create a virtual disk using makedisk
 
-$ ./makedisk mydisk 1024 1024 1 16 64 100 10 .28
 $ makedisk mydisk 1024 1024 1 16 64 100 10 .28
 
 This will create a disk which has 1024 blocks, each of length 1024
