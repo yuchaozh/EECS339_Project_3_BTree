@@ -1,5 +1,8 @@
 #include <assert.h>
 #include "btree.h"
+#include <vector>
+
+using namespace std;
 
 KeyValuePair::KeyValuePair()
 {}
@@ -195,7 +198,9 @@ ERROR_T BTreeIndex::LookupOrUpdateInternal(const SIZE_T &node,
   SIZE_T offset;
   KEY_T testkey;
   SIZE_T ptr;
-
+  
+	cout<<"in LookupOrUpdateInternal"<<endl;
+	
 	// construct the node from disk block
   rc= b.Unserialize(buffercache,node);
 
@@ -204,32 +209,47 @@ ERROR_T BTreeIndex::LookupOrUpdateInternal(const SIZE_T &node,
     return rc;
   }
 
-  switch (b.info.nodetype) { 
+  switch (b.info.nodetype) 
+  { 
   case BTREE_ROOT_NODE:
   case BTREE_INTERIOR_NODE:
+  	cout<<"internal or root"<<endl;
     // Scan through key/ptr pairs
     //and recurse if possible
     for (offset=0;offset<b.info.numkeys;offset++) 
     { 
+    	cout<<"offset: "<<offset<<endl;
     	// assign the offset key to testkey
       rc=b.GetKey(offset,testkey);
       // if there is error, abort and return 
-      if (rc) {  return rc; }
-      if (key<testkey || key==testkey) {
-	// OK, so we now have the first key that's larger
-	// so we ned to recurse on the ptr immediately previous to 
-	// this one, if it exists
-	rc=b.GetPtr(offset,ptr);
-	if (rc) { return rc; }
-	return LookupOrUpdateInternal(ptr,op,key,value);
+      if (rc) 
+      {	
+      	cout<<"error: "<<rc<<endl;  
+      	return rc; 
+      }
+      cout<<"key: "<<key<<" testkey: "<<testkey<<endl;
+      // "|| key==testkey" get the right point of key
+      if (key<testkey || key==testkey) 
+      {
+				// OK, so we now have the first key that's larger
+				// so we ned to recurse on the ptr immediately previous to 
+				// this one, if it exists
+				rc=b.GetPtr(offset,ptr);
+				if (rc) { return rc; }
+				return LookupOrUpdateInternal(ptr,op,key,value);
       }
     }
+    
     // if we got here, we need to go to the next pointer, if it exists
-    if (b.info.numkeys>0) { 
+    if (b.info.numkeys>0) 
+    { 
       rc=b.GetPtr(b.info.numkeys,ptr);
       if (rc) { return rc; }
       return LookupOrUpdateInternal(ptr,op,key,value);
-    } else {
+    } 
+    else 
+    {
+    	cout<<"nonexistent"<<endl;
       // There are no keys at all on this node, so nowhere to go
       return ERROR_NONEXISTENT;
     }
@@ -249,7 +269,7 @@ ERROR_T BTreeIndex::LookupOrUpdateInternal(const SIZE_T &node,
     if(rc) {return rc;}
     rc = b.Serialize(buffercache, node);
     return rc;
-	  return ERROR_UNIMPL;
+	  //return ERROR_UNIMPL;
 	}
       }
     }
@@ -359,12 +379,29 @@ static ERROR_T PrintNode(ostream &os, SIZE_T nodenum, BTreeNode &b, BTreeDisplay
   
 ERROR_T BTreeIndex::Lookup(const KEY_T &key, VALUE_T &value)
 {
+	cout<<"look up: "<<"key: "<<key<<" val: "<<value<<endl;
   return LookupOrUpdateInternal(superblock.info.rootnode, BTREE_OP_LOOKUP, key, value);
 }
 
 ERROR_T BTreeIndex::Insert(const KEY_T &key, const VALUE_T &value)
 {
   // WRITE ME
+  VALUE_T val;
+  BTreeNode node;
+  ERROR_T error;
+  SIZE_T offset;
+  error = LookupOrUpdateInternal(superblock.info.rootnode, BTREE_OP_LOOKUP, key, val);
+  switch(rc)
+  {
+  	// No that node, then insert
+  	case ERROR_NONEXISTENT:
+  		
+  		
+  
+  
+  
+  
+  
   return ERROR_UNIMPL;
 }
   
