@@ -4,7 +4,7 @@
 KeyValuePair::KeyValuePair()
 {}
 
-
+// initial list, assign key with k and assign value with v
 KeyValuePair::KeyValuePair(const KEY_T &k, const VALUE_T &v) :
   key(k), value(v)
 {}
