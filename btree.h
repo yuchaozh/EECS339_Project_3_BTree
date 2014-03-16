@@ -63,7 +63,9 @@ class BTreeIndex {
 				      const BTreeOp op, 
 				      const KEY_T &key,
 				      VALUE_T &val, std::vector<SIZE_T> &pointerPath);
-
+				      
+  // add a const in the end of the method means that the method is a access method. not a mutator(alter method)
+  // access method only can read the data rather than change it
   ERROR_T      DisplayInternal(const SIZE_T &node,
 			       ostream &o, 
 			       const BTreeDisplayType display_type=BTREE_DEPTH) const;
