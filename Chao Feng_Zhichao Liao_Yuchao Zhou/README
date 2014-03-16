@@ -1,0 +1,12 @@
+Team Members: Chao Feng, Yuchao Zhou, Zhichao Liao
+
+Milestone:
+In shortly, we implemented the insert, Sanity Check, Print, Update functions. 
+We did not implment the delete function and fast range queries.
+
+For the Sanity Check:
+1. We check whether the tree is integrated or not. In another words, check if the tree missing any keys or values.
+2. We check the keys in every btree node are in order.
+3. We check the key count in the superblock is the same as the actual nummber of keys in the tree's leaf nodes.
+
+
